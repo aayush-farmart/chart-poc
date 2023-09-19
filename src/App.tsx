@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import "./App.css";
@@ -9,6 +10,7 @@ import StackedBarChart, { getRandomColor } from "./recharts/StackedBarChart";
 import StackedBarChartjs from "./react-chartjs/StackedBarChart";
 import LineChart from "./react-chartjs/LineChart";
 import SimpleLineChart from "./recharts/LineChart";
+import PlotlyStackedBarChart from "./plotly/StackedBarChart";
 
 function App() {
   const chartjsLineData = {
@@ -36,14 +38,28 @@ function App() {
       };
     }),
   };
+
+  const plotlyData = labels.map((label) => {
+    return {
+      x: stackedData.map((d) => d[label]),
+      y: stackedData.map((d) => d.key),
+      name: label,
+      type: "bar",
+      orientation: "h",
+    };
+  });
+
+  const rechartsBarData = stackedData.map(({ key, ...rest }) => {
+    return { ...rest };
+  });
   return (
     <>
       <SimpleBarChart data={data} />
-      <StackedBarChart data={stackedData} />
-      {/* <StackedHorizontalBarChart data={stackedData} /> */}
+      <StackedBarChart data={rechartsBarData} />
       <StackedBarChartjs data={chartjsBarData} />
       <LineChart data={chartjsLineData} />
       <SimpleLineChart data={stackedData} />
+      <PlotlyStackedBarChart data={plotlyData} />
     </>
   );
 }
